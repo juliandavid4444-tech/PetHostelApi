@@ -46,40 +46,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Endpoints informativos
-// Configure static files for development UI
-if (app.Environment.IsDevelopment())
-{
-    app.UseStaticFiles();
-}
-
-// Map the root URL
-app.MapGet("/", () =>
-{
-    var isDevelopment = app.Environment.IsDevelopment();
-    
-    if (isDevelopment)
-    {
-        // In development, redirect to the HTML page
-        return Results.Redirect("/dev-home.html");
-    }
-    
-    // In production, return JSON API information
-    return Results.Ok(new
-    {
-        api = "PetHostel API",
-        version = "1.0.0",
-        status = "running",
-        environment = "production",
-        timestamp = DateTime.UtcNow,
-        endpoints = new
-        {
-            authentication = "POST /Auth/login",
-            commerce = "GET /Commerce/{id}",
-            health = "GET /health"
-        },
-        message = "🌐 PetHostel API is ready to serve your requests."
-    });
-});
+app.MapGet("/", () => Results.Ok("PetHostel API is running! 🐾"));
 
 app.MapGet("/health", () => Results.Ok(new { 
     status = "healthy", 

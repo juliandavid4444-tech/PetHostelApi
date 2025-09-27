@@ -2,6 +2,22 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "build",
+			"command": "dotnet",
+			"type": "process",
+			"args": [
+				"build",
+				"${workspaceFolder}",
+				"/property:GenerateFullPaths=true",
+				"/consoleloggerparameters:NoSummary"
+			],
+			"problemMatcher": "$msCompile",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "clean",
 			"command": "dotnet",
 			"type": "process",
@@ -16,21 +32,25 @@
 		{
 			"label": "stop-processes",
 			"type": "shell",
-			"command": "./stop-pethostel.sh",
+			"command": "./quick-clean.sh",
 			"group": "build",
 			"presentation": {
 				"echo": true,
-				"reveal": "always",
+				"reveal": "silent",
 				"focus": false,
-				"panel": "shared"
-			}
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": true
+			},
+			"problemMatcher": []
 		},
 		{
-			"label": "clean-start",
+			"label": "clean-build",
 			"dependsOrder": "sequence",
 			"dependsOn": [
 				"stop-processes",
-				"clean"
+				"clean",
+				"build"
 			],
 			"group": "build"
 		},
