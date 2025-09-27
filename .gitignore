@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+# VS Code development files
+.vscode/launch.json
+quick-clean.sh
