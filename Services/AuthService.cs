@@ -40,6 +40,8 @@ namespace PetHostelApi.Services
 
             try
             {
+                _logger.LogInformation("Iniciando autenticación para usuario: {UserName}", userName);
+                
                 // Buscar el usuario por nombre de usuario
                 var user = _context.User.FirstOrDefault(u => u.user_user == userName);
                 
@@ -79,7 +81,7 @@ namespace PetHostelApi.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error durante la autenticación del usuario '{UserName}'", userName);
+                _logger.LogError(ex, "Error durante la autenticación del usuario '{UserName}'. Error: {ErrorMessage}", userName, ex.Message);
                 return new AuthResult
                 {
                     IsSuccess = false,

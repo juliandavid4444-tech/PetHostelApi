@@ -9,11 +9,8 @@ namespace PetHostelApi.Contexts
 		{
 		}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-			optionsBuilder.UseSqlServer("Server=tcp:pethostel.database.windows.net,1433;Initial Catalog=PetHostelDB;Persist Security Info=False;User ID=juliandavid333;Password=JUlianb@501234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
-        }
+        // Removido OnConfiguring para evitar conflictos con la configuración en Program.cs
+        // La cadena de conexión se configura ahora en Program.cs usando appsettings.json
 
         public DbSet<Commerce> Commerce { get; set; }
 

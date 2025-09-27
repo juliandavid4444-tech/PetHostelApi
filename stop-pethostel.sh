@@ -33,10 +33,13 @@ fi
 
 # Verificar si hay algo usando los puertos comunes
 echo "🔍 Verificando puertos..."
-for port in 5017 5420 7103 7420; do
+for port in 5017 5420 7103 7420 8055 8056; do
     if lsof -i :$port >/dev/null 2>&1; then
         echo "⚠️  Puerto $port aún está en uso:"
         lsof -i :$port
+        echo "🔄 Liberando puerto $port..."
+        pkill -f ":$port" 2>/dev/null || true
+        sleep 1
     else
         echo "✅ Puerto $port está libre"
     fi

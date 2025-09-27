@@ -14,6 +14,27 @@
 			"problemMatcher": "$msCompile"
 		},
 		{
+			"label": "stop-processes",
+			"type": "shell",
+			"command": "./stop-pethostel.sh",
+			"group": "build",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": false,
+				"panel": "shared"
+			}
+		},
+		{
+			"label": "clean-start",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"stop-processes",
+				"clean"
+			],
+			"group": "build"
+		},
+		{
 			"label": "publish-release",
 			"command": "dotnet",
 			"type": "process",
@@ -26,7 +47,7 @@
 				"/consoleloggerparameters:NoSummary"
 			],
 			"problemMatcher": "$msCompile",
-			"dependsOn": "clean"
+			"dependsOn": "stop-processes"
 		}
 	]
 }
