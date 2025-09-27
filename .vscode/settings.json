@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin/Release/net7.0/publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/7aecb766-f050-4fd2-b0d1-92ee9b418ac3/resourceGroups/PetHostel/providers/Microsoft.Web/sites/PetHostelApi"
+}
