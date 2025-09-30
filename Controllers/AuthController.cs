@@ -23,51 +23,36 @@ namespace PetHostelApi.Controllers
             _authService = authService;
         }
 
-        [HttpPost("login")]
-        public ActionResult<MobileApiResponse<User>> Login(LoginRequest request)
+                [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginRequest request)
         {
             try
             {
-                // Validación adicional del request
-                if (request == null)
+                // Validaciones
+                if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
                 {
-                    return BadRequest(new ErrorResponse
+                    return BadRequest(new MobileApiResponse<object>
                     {
-                        Code = AuthErrorCodes.INVALID_REQUEST
+                        Success = false,
+                        Code = AuthErrorCodes.EMPTY_USERNAME
                     });
                 }
 
-                var authResult = _authService.Authenticate(request.user, request.password);
-                
-                if (!authResult.IsSuccess)
+                var result = _authService.Authenticate(request.Email, request.Password);
+
+                return Ok(new MobileApiResponse<User>
                 {
-                    var statusCode = GetStatusCode(authResult.ErrorType);
-                    
-                    var errorResponse = new ErrorResponse
-                    {
-                        Code = authResult.ErrorCode,
-                        Parameters = authResult.ErrorParameters
-                    };
-
-                    return StatusCode(statusCode, errorResponse);
-                }
-
-                // Login exitoso
-                var successResponse = new MobileApiResponse<User>
-                {
-                    Success = true,
-                    Data = authResult.User,
-                    Code = AuthErrorCodes.SUCCESS
-                };
-
-                return Ok(successResponse);
+                    Success = result.IsSuccess,
+                    Data = result.User,
+                    Code = result.ErrorCode
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error inesperado durante el proceso de login");
-                
-                return StatusCode(500, new ErrorResponse
+                _logger.LogError(ex, "Error during authentication");
+                return StatusCode(500, new MobileApiResponse<object>
                 {
+                    Success = false,
                     Code = AuthErrorCodes.SERVER_ERROR
                 });
             }
