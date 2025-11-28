@@ -103,8 +103,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 // Register services
-builder.Services.AddScoped<AuthService>(); // Legacy service
-builder.Services.AddScoped<IJwtService, JwtService>(); // New JWT service
+builder.Services.AddScoped<IJwtService, JwtService>(); // JWT service
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
