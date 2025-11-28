@@ -1,3 +1,5 @@
+using PetHostelApi.Constants;
+
 namespace PetHostelApi.Entities
 {
     public class AuthenticationResponse
@@ -7,6 +9,7 @@ namespace PetHostelApi.Entities
         public DateTime AccessTokenExpiration { get; set; }
         public DateTime RefreshTokenExpiration { get; set; }
         public UserInfo User { get; set; } = new();
+        public string ApiVersion { get; set; } = Constants.ApiVersion.Version;
     }
 
     public class UserInfo

@@ -112,7 +112,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
     { 
         Title = "PetHostel API", 
-        Version = "v1",
+        Version = PetHostelApi.Constants.ApiVersion.Version,
         Description = "API para gestión de hostales de mascotas con autenticación JWT"
     });
     

@@ -1,3 +1,4 @@
+using PetHostelApi.Constants;
 using System;
 
 namespace PetHostelApi.Entities
@@ -8,6 +9,7 @@ namespace PetHostelApi.Entities
         public T? Data { get; set; }
         public string Code { get; set; } = string.Empty;
         public Dictionary<string, object>? Parameters { get; set; }
+        public string ApiVersion { get; set; } = Constants.ApiVersion.Version;
     }
 
     public class ErrorResponse
