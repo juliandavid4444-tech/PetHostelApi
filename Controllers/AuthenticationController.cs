@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetHostelApi.Constants;
 using PetHostelApi.Entities;
 using PetHostelApi.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace PetHostelApi.Controllers
 {
@@ -31,14 +33,43 @@ namespace PetHostelApi.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                // Email validation
+                if (string.IsNullOrWhiteSpace(request.Email))
                 {
                     return BadRequest(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "INVALID_REGISTRATION_DATA",
-                        Data = ModelState.Where(x => x.Value?.Errors.Count > 0)
-                                         .ToDictionary(x => x.Key, x => x.Value?.Errors.Select(e => e.ErrorMessage))
+                        Code = AuthErrorCodes.EMPTY_EMAIL
+                    });
+                }
+
+                // Email format validation
+                if (!new EmailAddressAttribute().IsValid(request.Email))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Code = AuthErrorCodes.INVALID_EMAIL_FORMAT
+                    });
+                }
+
+                // Password validation
+                if (string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Code = AuthErrorCodes.EMPTY_PASSWORD
+                    });
+                }
+
+                // Names validation
+                if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.LastName))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Code = AuthErrorCodes.VALIDATION_ERROR
                     });
                 }
 
@@ -48,8 +79,7 @@ namespace PetHostelApi.Controllers
                     return BadRequest(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "REGISTRATION_FAILED",
-                        Parameters = new Dictionary<string, object> { { "message", "No se pudo registrar el usuario. El email puede estar en uso." } }
+                        Code = AuthErrorCodes.EMAIL_ALREADY_EXISTS
                     });
                 }
 
@@ -62,8 +92,7 @@ namespace PetHostelApi.Controllers
                 return StatusCode(500, new ApiResponse<object>
                 {
                     Success = false,
-                    Code = "SERVER_ERROR",
-                    Parameters = new Dictionary<string, object> { { "message", "Error interno del servidor" } }
+                    Code = AuthErrorCodes.SERVER_ERROR
                 });
             }
         }
@@ -81,13 +110,33 @@ namespace PetHostelApi.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                // Email validation
+                if (string.IsNullOrWhiteSpace(request.Email))
                 {
                     return BadRequest(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "INVALID_LOGIN_DATA",
-                        Parameters = new Dictionary<string, object> { { "message", "Datos de login inválidos" } }
+                        Code = AuthErrorCodes.EMPTY_EMAIL
+                    });
+                }
+
+                // Password validation
+                if (string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Code = AuthErrorCodes.EMPTY_PASSWORD
+                    });
+                }
+
+                // Email format validation
+                if (!new EmailAddressAttribute().IsValid(request.Email))
+                {
+                    return BadRequest(new ApiResponse<object>
+                    {
+                        Success = false,
+                        Code = AuthErrorCodes.INVALID_EMAIL_FORMAT
                     });
                 }
 
@@ -97,8 +146,7 @@ namespace PetHostelApi.Controllers
                     return Unauthorized(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "INVALID_CREDENTIALS",
-                        Parameters = new Dictionary<string, object> { { "message", "Credenciales inválidas" } }
+                        Code = AuthErrorCodes.INVALID_CREDENTIALS
                     });
                 }
 
@@ -111,8 +159,7 @@ namespace PetHostelApi.Controllers
                 return StatusCode(500, new ApiResponse<object>
                 {
                     Success = false,
-                    Code = "SERVER_ERROR",
-                    Parameters = new Dictionary<string, object> { { "message", "Error interno del servidor" } }
+                    Code = AuthErrorCodes.SERVER_ERROR
                 });
             }
         }
@@ -134,8 +181,7 @@ namespace PetHostelApi.Controllers
                     return BadRequest(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "TOKENS_REQUIRED",
-                        Parameters = new Dictionary<string, object> { { "message", "Access token y refresh token son requeridos" } }
+                        Code = AuthErrorCodes.TOKENS_REQUIRED
                     });
                 }
 
@@ -145,8 +191,7 @@ namespace PetHostelApi.Controllers
                     return BadRequest(new ApiResponse<object>
                     {
                         Success = false,
-                        Code = "INVALID_TOKENS",
-                        Parameters = new Dictionary<string, object> { { "message", "Tokens inválidos o expirados" } }
+                        Code = AuthErrorCodes.INVALID_TOKEN
                     });
                 }
 
@@ -158,8 +203,7 @@ namespace PetHostelApi.Controllers
                 return StatusCode(500, new ApiResponse<object>
                 {
                     Success = false,
-                    Code = "SERVER_ERROR",
-                    Parameters = new Dictionary<string, object> { { "message", "Error interno del servidor" } }
+                    Code = AuthErrorCodes.SERVER_ERROR
                 });
             }
         }

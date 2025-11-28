@@ -10,11 +10,8 @@ namespace PetHostelApi.Contexts
         {
         }
 
-        // Legacy entities (mantener por compatibilidad)
-        public DbSet<User> User { get; set; }
+        // Entities
         public DbSet<Commerce> Commerce { get; set; }
-        
-        // New Identity entities
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,16 +46,7 @@ namespace PetHostelApi.Contexts
                 entity.Property(u => u.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
             });
 
-            // Legacy entities configuration
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.HasKey(u => u.user_id);
-                entity.Property(u => u.user_name).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.user_surnames).IsRequired().HasMaxLength(100);
-                entity.Property(u => u.user_user).IsRequired().HasMaxLength(50);
-                entity.Property(u => u.user_password).IsRequired().HasMaxLength(255);
-            });
-
+            // Commerce configuration
             modelBuilder.Entity<Commerce>(entity =>
             {
                 entity.HasKey(c => c.com_id);
